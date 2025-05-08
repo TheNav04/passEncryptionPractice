@@ -4,13 +4,14 @@ import path from 'path';
 import http from 'http';
 
 import bcrypt from 'bcryptjs';
-
+import {encrypt, decrypt} from './security.js';
 
 
 const app = express();
 console.log('path: ' + path.resolve('../public'));
 
 let dataArr = [];   //this is data in memory ONLY, once application is turned off this will too
+
 
 
 // MIDDLEWARE
@@ -27,6 +28,30 @@ app.get('/', (req, res) => {
 
 });
 
+app.post('/loginUser', async (req, res) => {
+    try {
+        const {username, pass} = req.body;
+        
+        for(let i = 0; i < dataArr.length; i++){
+            let currAccount = dataArr[i];
+
+            if(currAccount['username'] == username){
+                console.log(currAccount + ' is in the database!');
+                const match = await bcrypt.compare(pass, currAccount['pass']);
+
+                if(match == true){
+                    res.send('login succesful');
+                    return;
+                }
+            }    
+        }
+        res.send("login failed");
+        
+    }
+    catch (error){
+        console.error('some error:', error);
+    }
+});
 
 //What other ways are their to send data to server other then JSON
 app.post('/registerUser', async (req, res) => {

@@ -1,4 +1,4 @@
-import {registerAccount} from './api.js';
+import {registerAccount, loginAccount} from './api.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('registerForm').addEventListener('submit', (event) => {
@@ -8,8 +8,10 @@ document.addEventListener('DOMContentLoaded', () => {
     
   });
 
-    document.getElementById('loginForm').addEventListener('click', () => {
-      // Your login logic here
+    document.getElementById('loginForm').addEventListener('submit', (event) => {
+      event.preventDefault();
+      loginAccount(event, document.getElementById('logUsername').value, document.getElementById('logPassword').value);
+
     });
   });
   

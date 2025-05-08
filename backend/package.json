@@ -13,6 +13,7 @@
   "description": "Basic App to practice data encryption.",
   "dependencies": {
     "bcryptjs": "^3.0.2",
+    "crypto": "^1.0.1",
     "express": "^5.1.0"
   }
 }
