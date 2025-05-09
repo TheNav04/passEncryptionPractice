@@ -1,5 +1,6 @@
 # Password Hashing Project
-This is a simple Node.js and JavaScript project where I practice hashing passwords and securing user data. The project demonstrates the basics of hashing passwords using Node.js and can be expanded with more security features such as encryption. This project is a learning experience, its not meant to be amazing.
+This is a simple Node.js and JavaScript project where I practice hashing passwords and securing user data. The project demonstrates the basics of hashing passwords using Node.js and can be expanded with more security features such as encryption. This project is a learning experience, its not meant to be amazing. Uses symmetric encryption.
+
 
 # Technologies Used
 1) Node.js: Server-side JavaScript runtime.
