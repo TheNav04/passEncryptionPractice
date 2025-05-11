@@ -1,9 +1,9 @@
 import {Debug} from './extra.js'
 
 export function registerAccount(event, username, pass) {
-    event.preventDefault();     
-    Debug.log('registerAccount() is called');
+    event.preventDefault(); 
 
+    Debug.log('registerAccount() is called');
     if(username == "" || pass == ""){
         Debug.log('Register Form not completed correctly!');
     }
@@ -15,7 +15,8 @@ export function registerAccount(event, username, pass) {
 }
 
 export function loginAccount(event, username, pass){
-    event.preventDefault();     
+    event.preventDefault();  
+
     Debug.log('loginAccount() is called');
     if(username == "" || pass == ""){
         Debug.log('Login Form not completed correctly!');
@@ -76,5 +77,44 @@ async function SendNewRegister(username, pass){
     }
     catch (error) {
         console.error("Some error happened: ", error);
+    }
+}
+
+
+export async function getPublicKey(){
+    try {
+        const publicKey = await fetch('/getPublicKey');
+        const confirmation = await publicKey.json();
+
+        Debug.log('encoded public key')
+        Debug.log(confirmation['key']);
+        Debug.log(confirmation.iv);
+
+        const key = Uint8Array.from(atob(confirmation.key), c => c.charCodeAt(0));
+        const iv = Uint8Array.from(atob(confirmation['iv']), c => c.charCodeAt(0));
+
+        Debug.log('decoded public key');
+        Debug.log(key);
+        Debug.log(iv);
+
+        const cryptoKey = await crypto.subtle.importKey(
+            'raw',         // raw format of the key
+            key,           // the Uint8Array key you received
+            'AES-GCM',     // algorithm
+            false,         // not extractable
+            ['encrypt']    // usage
+        );
+
+        Debug.log('cryptoKey is: ' + typeof cryptoKey);
+        Debug.log(cryptoKey);
+
+        return {
+            'publicKey': cryptoKey,
+            'iv': iv,
+        };
+        
+    }
+    catch (error) {
+        console.error('There was an error:', error);
     }
 }

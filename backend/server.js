@@ -4,20 +4,22 @@ import path from 'path';
 import http from 'http';
 
 import bcrypt from 'bcryptjs';
-import {encrypt, decrypt} from './security.js';
+import {encrypt, decrypt, encodedPublicKey, encodedPublicIV} from './security.js';
 
 
 const app = express();
 console.log('path: ' + path.resolve('../public'));
 
-let dataArr = [];   //this is data in memory ONLY, once application is turned off this will too
+let dataArr = [];   // this is data in memory ONLY, once application is turned off this will too
 
+console.log('key: ' + encodedPublicKey);
+console.log('iv: ' + encodedPublicIV);
 
 
 // MIDDLEWARE
-//Serving html, css, js from public
+// Serving html, css, js from public
 app.use(express.static(path.resolve('../public')));
-//Parsing JSON requests
+// Parsing JSON requests
 app.use(express.json());
 
 
@@ -26,6 +28,14 @@ app.use(express.json());
 app.get('/', (req, res) => {
     res.sendFile(path.resolve('../public/main.html'));
 
+});
+
+app.get('/getPublicKey', (req, res) => {
+    // OR use res.send(JSON.stringify{...})
+    res.json({
+        'key': encodedPublicKey,
+        'iv': encodedPublicIV
+    });    
 });
 
 app.post('/loginUser', async (req, res) => {
@@ -40,12 +50,12 @@ app.post('/loginUser', async (req, res) => {
                 const match = await bcrypt.compare(pass, currAccount['pass']);
 
                 if(match == true){
-                    res.send('login succesful');
+                    res.send(await encrypt('login succesful'));
                     return;
                 }
             }    
         }
-        res.send("login failed");
+        res.send(await encrypt('login failed'));
         
     }
     catch (error){

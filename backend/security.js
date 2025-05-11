@@ -1,8 +1,34 @@
 import crypto from 'crypto';
 
 const algorithm = 'aes-256-cbc';
+
+// FIXME: Server needs to generate both public and private key
+
+// Public key
+// Sending data in this form causes corruption
 const key = crypto.randomBytes(32); // Secure key storage in production
 const iv = crypto.randomBytes(16);  //Initialization Vector,  prevents same text from generating same cipher
+
+
+// Private Key
+let keyPrivate;
+let ivPrivate;
+
+// sending as raw binary could break JSON.stringify
+// need to encode, add a layer of abstraction to send
+export const encodedPublicKey = Buffer.from(key).toString('base64');
+export const encodedPublicIV = Buffer.from(iv).toString('base64');
+
+
+// WTF is this syntax
+// export const hexFormatKey = [...key].map(b => b.toString(16).padStart(2, '0')).join('');
+// export const hexFormatIV = [...iv].map(b => b.toString(16).padStart(2, '0')).join('');
+
+
+
+
+// export const hexFormatPrivateKey = [...keyPrivate].map(b => b.toString(16).padStart(2, '0')).join('');
+// export const hexFormatPrivateIV = [...ivPrivate].map(b => b.toString(16).padStart(2, '0')).join('');
 
 
 //Can make this async and return a promise
@@ -15,7 +41,6 @@ export async function encrypt(text){
         console.log(encryptData);
         resolve(encryptData);
     })
-    
 }
 
 export async function decrypt(text){
